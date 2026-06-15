@@ -1,12 +1,38 @@
 exp_moeda <- function(input, output, session){
   
+  arquivo_dados <- "partidas_moeda.csv"
   
+  
+  carregar_dados <- function() {
+    if(file.exists(arquivo_dados)) {
+      read.csv(arquivo_dados, stringsAsFactors = FALSE)
+    } else {
+      data.frame(
+        Nome = character(),
+        Total_Sorteios = integer(),
+        Total_Caras = integer(),
+        Total_Coroas = integer(),
+        Data_Hora = character(),
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+  
+  #Vigia e atualiza
+  banco_dados <- reactiveFileReader(
+    intervalMillis = 1000,  
+    session = session,
+    filePath = arquivo_dados,
+    readFunc = carregar_dados
+  )
+  
+  
+
   #definições
-   
   resultado_atual <- reactiveVal(NULL)
   historico_resultados <- reactiveVal(character(0)) 
   
-  
+ 
   #primeiro lançamento
   observe({   
     
@@ -39,6 +65,43 @@ exp_moeda <- function(input, output, session){
   
   
   
+  zerar_partida <- function() {
+    primeiro_lancamento <- sample(c("cara", "coroa"), 1)
+    resultado_atual(primeiro_lancamento)
+    historico_resultados(primeiro_lancamento)
+  }
+  
+  observeEvent(input$encerrar_partida, {
+    nome <- input$nome_jogador
+    
+    if(!is.null(nome) && nome != "") {
+      total <- length(historico_resultados())
+      caras <- sum(historico_resultados() == "cara")
+      coroas <- sum(historico_resultados() == "coroa")
+      
+      nova_partida <- data.frame(
+        Nome = nome,
+        Total_Sorteios = total,
+        Total_Caras = caras,
+        Total_Coroas = coroas,
+        stringsAsFactors = FALSE
+      )
+      
+      if(file.exists(arquivo_dados)) {  #salva no csv
+        dados_existentes <- read.csv(arquivo_dados, stringsAsFactors = FALSE)
+        dados_atualizados <- rbind(dados_existentes, nova_partida)
+      } else {
+        dados_atualizados <- nova_partida
+      }
+      
+      write.csv(dados_atualizados, arquivo_dados, row.names = FALSE)
+     
+      zerar_partida()
+    }
+  })
+      
+  
+      
   dados_convergencia <- reactive({
                                   hist <- historico_resultados()
                                   n <- length(hist)
@@ -48,6 +111,7 @@ exp_moeda <- function(input, output, session){
                                             n = seq_along(hist),
                                             p = p_cara
     )
+                                  
   })
   
   
@@ -96,6 +160,42 @@ exp_moeda <- function(input, output, session){
   })
   
   
+  #Saídas para a aba histórico de partidas
+  output$tabela_historico <- renderTable({
+    dados <- banco_dados()
+    if(nrow(dados) == 0) {
+      return(data.frame(Mensagem = "Nenhuma partida encerrada ainda"))
+    }
+    dados[, c("Jogador", "Caras", "Coroas", "Total_Sorteios", "Data_Hora")]
+  })
+  
+  output$grafico_convergencia_historico <- renderPlot({
+    dados <- banco_dados()
+    req(nrow(dados) > 0)
+  
+    dados$Total_Caras_Acumulado <- cumsum(dados$Caras)
+    dados$Total_Sorteios_Acumulado <- cumsum(dados$Total_Sorteios)
+    dados$Proporcao_Acumulada <- dados$Total_Caras_Acumulado / dados$Total_Sorteios_Acumulado
+    dados$Partida <- 1:nrow(dados)
+  
+    plot(
+      dados$Partida, dados$Proporcao_Acumulada,
+      type = "b",
+      col = "#2F5D50",
+      lwd = 2,
+      pch = 19,
+      ylim = c(0, 1),
+      xlab = "Número de partidas encerradas",
+      ylab = "Proporção acumulada de caras",
+      main = "Convergência da proporção de caras (todas as partidas)"
+    )
+    abline(h = 0.5, col = "#67161C", lty = 2, lwd = 2)
+    grid()
+  })
+  
+  
+  
+  
   #taglist com textos e diagramação
   tagList(
     
@@ -105,6 +205,10 @@ exp_moeda <- function(input, output, session){
     textOutput(
       session$ns("resultado_moeda")
     ),
+    br(),
+    textInput(session$ns("nome_jogador"), 
+              "Seu nome:", 
+              placeholder = "Digite seu nome aqui"),
     br(),
     fluidRow(
       
@@ -174,7 +278,8 @@ exp_moeda <- function(input, output, session){
   onde \\(\\xrightarrow{P}\\) denota convergência em probabilidade.
   </p>
   ")
-    )
+    ),
+    
     
   )
   
