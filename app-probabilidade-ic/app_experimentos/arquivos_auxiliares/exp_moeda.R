@@ -6,6 +6,24 @@ exp_moeda <- function(input, output, session){
   resultado_atual <- reactiveVal(NULL)
   historico_resultados <- reactiveVal(character(0)) 
   
+  
+  #primeiro lançamento
+  observe({   
+    
+    if(length(historico_resultados()) == 0){
+      lancamento <- sample(
+        c("cara", "coroa"),
+        size = 1,
+        replace = TRUE
+      )
+      resultado_atual(lancamento)
+      historico_resultados(lancamento)
+      
+    }
+    
+  })
+  
+  #outros lançamentos a partir do botao
   observeEvent(input$novo_lancamento, {
     
                    lancamento <- sample(
@@ -20,18 +38,22 @@ exp_moeda <- function(input, output, session){
   })
   
   
+  
   dados_convergencia <- reactive({
-    hist <- historico_resultados()
-    n <- length(hist)
-    req(n > 0)
-    p_cara <- cumsum(hist == "cara") / seq_along(hist)
-    data.frame(
-                n = seq_along(hist),
-                 p = p_cara
+                                  hist <- historico_resultados()
+                                  n <- length(hist)
+                                  req(n > 0)
+                                  p_cara <- cumsum(hist == "cara") / seq_along(hist)
+                                  data.frame(
+                                            n = seq_along(hist),
+                                            p = p_cara
     )
   })
   
-  #outputs
+  
+  
+ #_____________OUTPUTS
+  
   output$resultado_moeda <- renderText({
     req(resultado_atual())
     paste("Último lançamento:", resultado_atual())
@@ -57,26 +79,7 @@ exp_moeda <- function(input, output, session){
   })
   
   
-  
-  # output$grafico_moeda <- renderPlot({
-  #   req(length(historico_resultados()) > 0)
-  #   df <- data.frame(
-  #     resultado = historico_resultados()
-  #   )
-  #   
-  #   ggplot(df, aes(x = resultado, fill = resultado)) +
-  #     geom_bar(alpha = 0.8) +
-  #     scale_fill_manual(values = c("cara" = "#2F5D50", "coroa" = "#67161C")) +
-  #     labs(
-  #       title = "Frequência dos lançamentos da moeda",
-  #       x = "Resultado",
-  #       y = "Frequência"
-  #     ) +
-  #     tema_base_graficos 
-  # })
-  # 
   output$grafico_convergencia <- renderPlot({
-    
     df <- dados_convergencia()
     plot(
       df$n, df$p,
@@ -88,8 +91,7 @@ exp_moeda <- function(input, output, session){
       ylab = "P(cara) acumulada",
       main = "Convergência da probabilidade da moeda"
     )
-    
-    abline(h = 0.5, col = "#67161C", lty = 2, lwd = 2)
+      abline(h = 0.5, col = "#67161C", lty = 2, lwd = 2)
     
   })
   
@@ -98,18 +100,31 @@ exp_moeda <- function(input, output, session){
   tagList(
     
     h3("Lançamento de uma Moeda Honesta"),
-    
-    
     br(), 
-    
     textOutput(
       session$ns("resultado_moeda")
     ),
     br(),
-    tableOutput(
-      session$ns("tabela_moeda")
+    fluidRow(
+      
+      column(
+        width = 6,
+        tableOutput(
+          session$ns("tabela_moeda")
+        )
+      ),
+      
+      column(
+        width = 6,
+        br(),
+        actionButton(
+          session$ns("encerrar_partida"),
+          "Encerrar Partida",
+          class = "btn-danger"
+        )
+      )
+      
     ),
-    # plotOutput(session$ns("grafico_moeda")),
     plotOutput(session$ns("grafico_convergencia"), height = "350px")
     
   )

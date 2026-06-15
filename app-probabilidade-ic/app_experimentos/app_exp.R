@@ -36,27 +36,31 @@ exp_ui <- function(id){
 exp_server <- function(id){
   
   moduleServer(id, function(input, output, session) {
-  
-  #teste
-  # observeEvent(input$tipo_exp, {
-  #   if (input$tipo_exp != "") {
-  #     print("Experimento selecionado")
-  #   } 
-  # })
-  
 
 
+
+    
+    
   output$painel_exp <- renderUI({
     req(input$tipo_exp != "")
     switch(
       input$tipo_exp,
     
       "PI" = exp_pi(input, output, session),
-      "Moeda" = exp_moeda(input,output,session)
+      
+      
+      "Moeda" = tabsetPanel(
+        tabPanel( "Simulação",exp_moeda(input, output, session)), 
+        tabPanel("Histórico de Partidas"),
+        tabPanel("Convergencia Quase certa"),
+        tabPanel("Lei dos Grandes Números")
+      )
+      #"Monty Hall" = exp_monty(inpu,outpu,session)
+      
       
     )
-})
-    
-  
+
   })
+  
 }
+)}
