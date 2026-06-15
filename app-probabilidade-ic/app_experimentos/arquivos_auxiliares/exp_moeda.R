@@ -101,6 +101,7 @@ exp_moeda <- function(input, output, session){
     
     h3("Lançamento de uma Moeda Honesta"),
     br(), 
+   
     textOutput(
       session$ns("resultado_moeda")
     ),
@@ -125,7 +126,55 @@ exp_moeda <- function(input, output, session){
       )
       
     ),
-    plotOutput(session$ns("grafico_convergencia"), height = "350px")
+    plotOutput(session$ns("grafico_convergencia"), height = "350px"),
+    br(),
+    h3("Convergência em Probabilidade"),
+    br(), 
+    withMathJax(
+      HTML("
+  <p>
+  Ao lançar uma moeda honesta sucessivamente, onde a probabilidade teórica de sair 'cara' é 
+  \\(p = 0,5\\) a proporção observada de caras após \\(n\\) lançamentos é definida como:
+  </p>
+  
+  $$\\hat{p}_n = \\frac{\\text{Número de caras}}{n}$$
+  
+  <p>
+  A <strong>Lei Fraca dos Grandes Números</strong> estabelece que esta proporção 
+  converge em probabilidade para a probabilidade teórica:
+  </p>
+  
+  $$\\lim_{n\\to\\infty} P(|\\hat{p}_n - p| > \\varepsilon) = 0, \\quad \\forall \\varepsilon > 0$$
+  
+  <p>
+  Ou seja, à medida que aumentamos o número de lançamentos, a probabilidade de a 
+  proporção observada se afastar do valor verdadeiro (0,5) por mais do que uma pequena 
+  margem \\(\\varepsilon\\) tende a zero.
+  </p>
+  
+  <p>
+  No gráfico abaixo, a linha verde representa \\(\\hat{p}_n\\) (proporção acumulada de caras) 
+  e a linha vermelha tracejada indica o valor teórico \\(p = 0,5\\). Observamos que, 
+  conforme \\(n\\) cresce:
+  </p>
+  
+  <ul>
+    <li>As oscilações de \\(\\hat{p}_n\\) diminuem de amplitude</li>
+    <li>\\(\\hat{p}_n\\) se aproxima cada vez mais de 0,5</li>
+    <li>A probabilidade de grandes desvios torna-se cada vez menor</li>
+  </ul>
+  
+  <p>
+  Matematicamente, dizemos que:
+  </p>
+  
+  $$\\hat{p}_n \\xrightarrow{P} 0,5$$
+  
+  <p>
+  onde \\(\\xrightarrow{P}\\) denota convergência em probabilidade.
+  </p>
+  ")
+    )
     
   )
   
