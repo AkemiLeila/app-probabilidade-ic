@@ -1,0 +1,62 @@
+library(shiny)
+library(ggplot2)
+library(DT)
+
+
+arquivos_aux_exp <- list.files("app_experimentos/arquivos_auxiliares", full.names = TRUE)
+sapply(arquivos_aux_exp, source)
+
+
+exp_ui <- function(id){
+
+  fluidPage(
+    withMathJax(),
+    sidebarLayout(
+             sidebarPanel(
+                           input_exp(id)
+                           ),
+              mainPanel(
+                          conditionalPanel(
+                          condition = paste0("input['",NS(id, "tipo_exp"), "'] == ''"),
+                                         texto_objetivo_casos),
+                          conditionalPanel(
+                          condition = paste0("input['", NS(id, "tipo_exp"),  "'] == 'PI'" ),
+                          ),
+                          conditionalPanel(
+                          condition = paste0("input['", NS(id, "tipo_exp"),  "'] == 'Moeda'" ),
+                          ),
+                          uiOutput(NS(id,"painel_exp"))
+                        )
+    )
+  )
+}
+
+
+
+exp_server <- function(id){
+  
+  moduleServer(id, function(input, output, session) {
+  
+  #teste
+  # observeEvent(input$tipo_exp, {
+  #   if (input$tipo_exp != "") {
+  #     print("Experimento selecionado")
+  #   } 
+  # })
+  
+
+
+  output$painel_exp <- renderUI({
+    req(input$tipo_exp != "")
+    switch(
+      input$tipo_exp,
+    
+      "PI" = exp_pi(input, output, session),
+      "Moeda" = exp_moeda(input,output,session)
+      
+    )
+})
+    
+  
+  })
+}
