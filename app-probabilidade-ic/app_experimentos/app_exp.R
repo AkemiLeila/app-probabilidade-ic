@@ -50,8 +50,8 @@ exp_server <- function(id){
       
       
       "Moeda" = tabsetPanel(
-        tabPanel( "Simulação",exp_moeda(input, output, session)), 
-        tabPanel("Histórico de Partidas"),
+        tabPanel( "Simulação",exp_moeda_simulacao(input, output, session)), 
+        tabPanel("Histórico de Partidas", exp_moeda_historico(input, output, session)),
         tabPanel("Convergencia Quase certa")
       )
       #"Monty Hall" = exp_monty(inpu,outpu,session)
