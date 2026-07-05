@@ -95,17 +95,14 @@ distribuicoes_server <-  function(id){
                  #escolha das distribuições no painel lateral
                  observeEvent(input$tipo_dist, {
                    if (input$tipo_dist == "Discretas") {
-                     updateSelectInput(session, 
-                                       session$ns("dist"), 
+                     updateSelectInput(session,"dist", 
                                        choices = c("", "Binomial", "Binomial Negativa", "Geométrica", "Hipergeométrica", "Poisson"))
                    } else if (input$tipo_dist == "Contínuas"){ 
-                     updateSelectInput(session, 
-                                       session$ns("dist"), 
+                     updateSelectInput(session, "dist", 
                                        choices = c("", "Beta", "Cauchy", "Exponencial", "Gama", "Normal", "Qui-quadrado", "T-Student", 
                                                    "Uniforme"))
                    } else {
-                     updateSelectInput(session, 
-                                       session$ns("dist"), 
+                     updateSelectInput(session, "dist", 
                                        choices = c("", "Beta", "Binomial", "Binomial Negativa", "Cauchy",  "Exponencial", "Gama", 
                                                    "Geométrica", "Hipergeométrica", "Normal", "Poisson", "Qui-quadrado", "T-Student", 
                                                    "Uniforme"))
