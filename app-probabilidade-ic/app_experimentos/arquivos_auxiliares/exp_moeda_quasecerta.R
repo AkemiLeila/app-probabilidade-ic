@@ -4,8 +4,7 @@ exp_moeda_cqc <- function(input, output, session){
   
   dados_cqc <- reactiveVal(NULL)
   
-  
- 
+
   
   observeEvent(input$nova_simulacao, {
     
@@ -22,6 +21,15 @@ exp_moeda_cqc <- function(input, output, session){
         trajetorias = trajetorias)
     )
     
+     
+     
+     updateSliderInput(
+       session,
+       "progresso",
+       value = 1
+     )
+     
+     
   })
   
   
@@ -33,6 +41,9 @@ exp_moeda_cqc <- function(input, output, session){
     req(dados_cqc())
     
     df <- dados_cqc()
+    
+    k <- input$progresso
+    
     cores <- c(
       "#2F5D50", # verde institucional
       "#2E4F73", # azul institucional
@@ -42,9 +53,11 @@ exp_moeda_cqc <- function(input, output, session){
       "#D95F02"  # laranja queimado
     )
     
+    nomes <- paste("Amostra", 1:6)
+    
     matplot(
-      x = df$n,
-      y = df$trajetorias,
+      x = df$n[1:k],
+      y = df$trajetorias[1:k, , drop = FALSE],
       type = "l",
       col = cores,
       lty = 1,
@@ -59,7 +72,20 @@ exp_moeda_cqc <- function(input, output, session){
       h = 0.5,
       col = "#67161C",
       lty = 2,
-      lwd = 2
+      lwd = 2,
+      
+    )
+    
+    legend(
+      "topright",
+      legend = c(
+        paste("Amostra", 1:6),
+        expression(p == 0.5)
+      ),
+      col = c(cores, "#67161C"),
+      lty = c(rep(1, 6), 2),
+      lwd = 2,
+      bty = "n"
     )
     
   })
@@ -76,6 +102,17 @@ exp_moeda_cqc <- function(input, output, session){
                  "Nova Simulação"),
     
     br(),
+    br(),
+    sliderInput(
+      session$ns("progresso"),
+      "Número de lançamentos",
+      min = 1,
+      max = 1000,
+      value = 1,
+      step = 1,
+      animate = TRUE
+    ),
+    
     br(),
     plotOutput(session$ns("grafico_cqc"), height = "600px")
   )

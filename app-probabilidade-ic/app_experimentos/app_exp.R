@@ -1,6 +1,4 @@
-library(shiny)
-library(ggplot2)
-library(DT)
+
 
 
 arquivos_aux_exp <- list.files("app_experimentos/arquivos_auxiliares", full.names = TRUE)
@@ -10,6 +8,7 @@ sapply(arquivos_aux_exp, source)
 exp_ui <- function(id){
 
   fluidPage(
+    useShinyjs(),
     withMathJax(),
     sidebarLayout(
              sidebarPanel(

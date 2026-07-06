@@ -48,7 +48,28 @@ exp_moeda_simulacao <- function(input, output, session){
     historico_resultados(primeiro_lancamento)
   }
   
+  
+  observe({
+    n <- length(historico_resultados())
+    
+    if (n < 10) {
+      shinyjs::disable("encerrar_partida")
+    } else {
+      shinyjs::enable("encerrar_partida")
+    }
+  })
+  
   observeEvent(input$encerrar_partida, {
+    
+    req(length(historico_resultados()) > 0)
+    
+    if (length(historico_resultados()) < 10) {
+      showNotification(
+        "Você precisa de pelo menos 10 lançamentos para encerrar a partida.",
+        type = "error"
+      )
+      return(NULL)
+    }
     
     total <- length(historico_resultados())
     caras <- sum(historico_resultados() == "cara")
@@ -188,6 +209,14 @@ exp_moeda_simulacao <- function(input, output, session){
       column(
         width = 6,
         br(),
+        
+        actionButton(
+          session$ns("novo_lancamento"),
+          "Nova Jogada",
+          class = "btn-primary"
+        ),
+        
+        br(), br(),
         actionButton(
           session$ns("encerrar_partida"),
           "Encerrar Partida",
@@ -196,6 +225,8 @@ exp_moeda_simulacao <- function(input, output, session){
       )
       
     ),
+    
+    br(), br(),
     plotOutput(session$ns("grafico_convergencia"), height = "350px"),
     br(),
     h3("Convergência em Probabilidade"),

@@ -13,10 +13,7 @@ input_exp <- function(id){
       
       conditionalPanel(
       condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Moeda'"),
-      helpText("Simulação de probabilidade para uma moeda honesta"),
-      actionButton(
-        NS(id, "novo_lancamento"),
-        "Novo lançamento"
-        )
+      helpText("Simulação de probabilidade para uma moeda honesta")
+     
       )
 )}

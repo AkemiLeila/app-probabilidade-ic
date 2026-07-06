@@ -1,11 +1,12 @@
+
 library(shiny)
 library(ggplot2)
 library(DT)
 library(bslib)
 library(paletteer)
+library(shinyjs)
 
 source("temas/temas_graficos.R")
-
 source("app_distribuicoes/app_dist.R")
 source("app_comparacoes/app_comp.R")
 source("app_experimentos/app_exp.R")
