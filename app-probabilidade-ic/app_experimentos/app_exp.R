@@ -36,10 +36,6 @@ exp_server <- function(id){
   
   moduleServer(id, function(input, output, session) {
 
-
-
-    
-    
   output$painel_exp <- renderUI({
     req(input$tipo_exp != "")
     switch(

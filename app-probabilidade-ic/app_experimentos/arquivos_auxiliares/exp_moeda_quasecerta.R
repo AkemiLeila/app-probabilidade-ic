@@ -5,35 +5,27 @@ exp_moeda_cqc <- function(input, output, session){
   dados_cqc <- reactiveVal(NULL)
   
 
+  gerar_simulacao <- function() {
+    trajetorias <- replicate(6, 
+                             {lancamentos <- rbinom(n = 10000, size = 1, prob = 0.5)
+                              caras_acumulada <- cumsum(lancamentos)
+                              frequencia <- caras_acumulada / seq_along(lancamentos)
+                              frequencia
+                              })
+     dados_cqc(list(n = seq_len(10000), trajetorias = trajetorias))
+     updateSliderInput(session,"progresso", value = 1)
+     
+  }
   
-  observeEvent(input$nova_simulacao, {
+  
+    gerar_simulacao()
+
+    observeEvent(input$nova_simulacao, {
+                 gerar_simulacao()
+  
+    })
     
-    trajetorias <- replicate(6,
-                             {
-                               lancamentos <- rbinom(n = 1000, size = 1, prob = 0.5)
-                               caras_acumulada <- cumsum(lancamentos)
-                               frequencia <- caras_acumulada/seq_along(lancamentos)
-                               frequencia
-                             })
-     dados_cqc(
-      list(
-        n = seq_len(1000),
-        trajetorias = trajetorias)
-    )
     
-     
-     
-     updateSliderInput(
-       session,
-       "progresso",
-       value = 1
-     )
-     
-     
-  })
-  
-  
-  
   #outputs
   
   output$grafico_cqc <- renderPlot({
@@ -43,6 +35,9 @@ exp_moeda_cqc <- function(input, output, session){
     df <- dados_cqc()
     
     k <- input$progresso
+    
+    epsilon <- max(abs(df$trajetorias[k, ] - 0.5))
+    
     
     cores <- c(
       "#2F5D50", # verde institucional
@@ -68,11 +63,23 @@ exp_moeda_cqc <- function(input, output, session){
       main = "Convergência Quase Certa"
     )
     
+    polygon(
+      x = c(1, k, k, 1),
+      y = c(
+        0.5 - epsilon,
+        0.5 - epsilon,
+        0.5 + epsilon,
+        0.5 + epsilon
+      ),
+      col = adjustcolor("#2E4F73", alpha.f = 0.12),
+      border = NA
+    )
+    
     abline(
       h = 0.5,
       col = "#67161C",
       lty = 2,
-      lwd = 2,
+      lwd = 2
       
     )
     
@@ -88,7 +95,22 @@ exp_moeda_cqc <- function(input, output, session){
       bty = "n"
     )
     
+    text(
+      x = k * 0.75,
+      y = 0.08,
+      labels = bquote(epsilon == .(round(epsilon, 4))),
+      cex = 1.2,
+      font = 2,
+      col = "#67161C"
+    )
+    
+    
+    
   })
+    
+    
+    
+    
   
   
   
@@ -107,7 +129,7 @@ exp_moeda_cqc <- function(input, output, session){
       session$ns("progresso"),
       "Número de lançamentos",
       min = 1,
-      max = 1000,
+      max = 10000,
       value = 1,
       step = 1,
       animate = TRUE
