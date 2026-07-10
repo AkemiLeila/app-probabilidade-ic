@@ -40,5 +40,6 @@ jobs:
           Rscript -e "rsconnect::deployApp(
             appDir='.',
             appName='app-probabilidade-ic',
-            forceUpdate = TRUE
+            forceUpdate = TRUE,
+            forceCheck = FALSE
           )"
