@@ -41,5 +41,5 @@ jobs:
             appDir='.',
             appName='app-probabilidade-ic',
             forceUpdate = TRUE,
-            forceCheck = FALSE
+            errorOnPreFlightError = FALSE
           )"
