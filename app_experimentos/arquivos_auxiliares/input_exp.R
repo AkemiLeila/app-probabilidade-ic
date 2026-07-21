@@ -2,7 +2,7 @@ input_exp <- function(id){
   
   
   tagList(
-      selectInput(NS(id,"tipo_exp"), "Experimentos:", choices = c("", "PI", "Moeda")),
+      selectInput(NS(id,"tipo_exp"), "Experimentos:", choices = c("", "PI", "Moeda", "Monty Hall")),
 
 
       conditionalPanel(
@@ -15,5 +15,9 @@ input_exp <- function(id){
       condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Moeda'"),
       helpText("Simulação de probabilidade para uma moeda honesta")
      
+      ),
+      conditionalPanel(
+        condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Monty Hall'"),
+        helpText("Simulação do experimento de probabilidade condicional para Monty Hall")
       )
 )}

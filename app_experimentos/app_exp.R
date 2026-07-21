@@ -8,12 +8,14 @@ sapply(arquivos_aux_exp, source)
 exp_ui <- function(id){
 
   fluidPage(
+    
     useShinyjs(),
+    
     withMathJax(),
+    
     sidebarLayout(
-             sidebarPanel(
-                           input_exp(id)
-                           ),
+             sidebarPanel( input_exp(id) ),
+             
               mainPanel(
                           conditionalPanel(
                           condition = paste0("input['",NS(id, "tipo_exp"), "'] == ''"),
@@ -24,6 +26,10 @@ exp_ui <- function(id){
                           conditionalPanel(
                           condition = paste0("input['", NS(id, "tipo_exp"),  "'] == 'Moeda'" ),
                           ),
+                          conditionalPanel(
+                            condition = paste0("input['", NS(id, "tipo_exp"),  "'] == 'Monty Hall'" ),
+                          ),
+                          
                           uiOutput(NS(id,"painel_exp"))
                         )
     )
@@ -48,8 +54,12 @@ exp_server <- function(id){
         tabPanel( "Simulação",exp_moeda_simulacao(input, output, session)), 
         tabPanel("Histórico de Partidas", exp_moeda_historico(input, output, session)),
         tabPanel("Convergencia Quase certa", exp_moeda_cqc(input,output,session))
+      ),
+      
+      "Monty Hall" = tabsetPanel(
+        tabPanel("Jogo",exp_montyhall_jogo(input,output,session)),
+        tabPanel("Simulação", exp_montyhall_simulacao(input, output, session))
       )
-      #"Monty Hall" = exp_monty(inpu,outpu,session)
       
       
     )
