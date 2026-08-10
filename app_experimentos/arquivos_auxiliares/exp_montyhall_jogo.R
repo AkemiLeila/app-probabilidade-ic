@@ -21,17 +21,17 @@ exp_montyhall_jogo <- function(input, output, session) {
       decisao(NULL)
       escolha_final(NULL)
       resultado(NULL)
-      
+
       shinyjs::removeClass(
         id = session$ns("porta_1"),
         class = "porta-escolhida"
       )
-      
+
       shinyjs::removeClass(
         id = session$ns("porta_2"),
         class = "porta-escolhida"
       )
-      
+
       shinyjs::removeClass(
         id = session$ns("porta_3"),
         class = "porta-escolhida"
@@ -63,7 +63,7 @@ exp_montyhall_jogo <- function(input, output, session) {
       c(escolha_1(), premio())
     )
     
-    print(portas_possiveis)  #debug
+   # print(portas_possiveis)  #debug
     
     #quando escolha_1 != de premio só existe uma porta possível para ser aberta
     #porem, quando a escolha_1 = premio
@@ -87,7 +87,7 @@ exp_montyhall_jogo <- function(input, output, session) {
       escolha_1(porta)
       
       abrir_porta_monty()
-      
+
       shinyjs::disable(session$ns("porta_1"))
       shinyjs::disable(session$ns("porta_2"))
       shinyjs::disable(session$ns("porta_3"))
@@ -95,19 +95,19 @@ exp_montyhall_jogo <- function(input, output, session) {
     
     #observe para as 3 portas (identificar a escolha inicial do usuario)
     observeEvent(input$porta_1,{
-      
+
       shinyjs::addClass(
         id = session$ns("porta_1"),
         class = "porta-escolhida"
       )
-      
+
       escolha_porta(1)
       
       
     })
     
     observeEvent(input$porta_2,{
-      
+
       shinyjs::addClass(
         id = session$ns("porta_2"),
         class = "porta-escolhida"
@@ -231,6 +231,29 @@ exp_montyhall_jogo <- function(input, output, session) {
       suspendWhenHidden = FALSE
     )
     
+    #teste para box com infos
+    output$info_jogada <- renderUI({
+      
+      if (is.null(escolha_1()) || !any(portas_abertas())) {
+        return(NULL)
+      }
+      porta_aberta <- which(portas_abertas())
+      
+      div(
+        class = "box-info-jogada",
+        
+        p(
+          strong("Porta escolhida: "),
+          escolha_1()
+        ),
+        
+        p(
+          strong("Porta aberta por Monty Hall: "),
+          porta_aberta
+        )
+        
+      )
+    })
     
     #saída para teste 
     output$debug <- renderPrint({
@@ -258,51 +281,74 @@ exp_montyhall_jogo <- function(input, output, session) {
     
     tagList(
       tags$style(HTML("
-          .btn-porta {
-           background: transparent;
-           border: none;
-           padding: 0;
-          }
+ 
+.porta-container {
+  text-align: center;
+}
 
-          .btn-porta:hover {
-           background: transparent;
-          }
+.numero-porta {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
 
-          .btn-porta.porta-escolhida {
-           opacity: 0.3;
-  }
+.btn-porta {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0 auto;
+  display: block;
+}
+
+.btn-porta:hover {
+  background: transparent;
+}
+
+.btn-porta.porta-escolhida img {
+  opacity: 0.3;
+}
       ")),
-   
+
       h3("Experimento de Monty Hall"),
       br(),
-      p("Escolha uma das três portas. 
-      Atrás de uma delas está o prêmio."
-      ),
-      
+      p("Escolha uma das portas abaixo"),
       br(),
       
       fluidRow( 
       
         column(width = 4,
-          actionButton( session$ns("porta_1"),
+               div(
+                 class = "porta-container",
+                 div( class = "numero-porta", "1"),
+                 actionButton( session$ns("porta_1"),
                         uiOutput(session$ns("imagem_porta_1")),
                        class = "btn-porta"
           )
+        )
         ),
+        
         column(width = 4,
-          actionButton(session$ns("porta_2"),
+               div(
+                 class = "porta-container",
+                 div( class = "numero-porta", "2"),
+                 actionButton(session$ns("porta_2"),
                        uiOutput(session$ns("imagem_porta_2")),
                        class = "btn-porta"
           )
+        )
         ),
         column(width = 4,
-          actionButton( session$ns("porta_3"),
+               div(
+                 class = "porta-container",
+                 div( class = "numero-porta", "3"),
+                 actionButton( session$ns("porta_3"),
                         uiOutput(session$ns("imagem_porta_3")),
                         class = "btn-porta"
           )
           
         )
-        
+        )
         
       ),
       br(),
@@ -310,15 +356,15 @@ exp_montyhall_jogo <- function(input, output, session) {
       
       conditionalPanel(
         condition = sprintf("output['%s']", session$ns("porta_escolhida")),
-        
+        uiOutput(session$ns("info_jogada")),
         div(
           class = "text-center",
-        
+
          actionButton(
           session$ns("manter"),
           "MANTER JOGADA"
           ),
-        
+
           actionButton(
          session$ns("trocar"),
          "TROCAR JOGADA"
@@ -339,7 +385,7 @@ exp_montyhall_jogo <- function(input, output, session) {
       ),
       
       
-      verbatimTextOutput(session$ns("debug")),
+      #verbatimTextOutput(session$ns("debug")),
       
       
       br(),

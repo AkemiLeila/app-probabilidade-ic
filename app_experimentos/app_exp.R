@@ -58,7 +58,8 @@ exp_server <- function(id){
       
       "Monty Hall" = tabsetPanel(
         tabPanel("Jogo",exp_montyhall_jogo(input,output,session)),
-        tabPanel("Simulação", exp_montyhall_simulacao(input, output, session))
+        # tabPanel("Simulação", exp_montyhall_simulacao(input, output, session)),
+        tabPanel("Teoria", exp_montyhall_teoria(input, output, session))
       )
       
       
