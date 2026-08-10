@@ -188,15 +188,6 @@ $$
         
         
         textOutput(session$ns( "estimativa_pi")),
-      #   
-      #   plotOutput(session$ns("grafico_pi"), height = "350px"),
-      # 
-      #   br(),
-      #   h4("Evolução da Estimativa"),
-      #   p("O gráfico abaixo mostra como a estimativa de π converge para o valor verdadeiro
-      # à medida que mais pontos são adicionados."),
-      # 
-      #   plotOutput(session$ns("grafico_convergencia"), height = "400px")
 
       
       fluidRow(

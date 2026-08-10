@@ -21,6 +21,21 @@ exp_montyhall_jogo <- function(input, output, session) {
       decisao(NULL)
       escolha_final(NULL)
       resultado(NULL)
+      
+      shinyjs::removeClass(
+        id = session$ns("porta_1"),
+        class = "porta-escolhida"
+      )
+      
+      shinyjs::removeClass(
+        id = session$ns("porta_2"),
+        class = "porta-escolhida"
+      )
+      
+      shinyjs::removeClass(
+        id = session$ns("porta_3"),
+        class = "porta-escolhida"
+      )
     }
     
     nova_partida()
@@ -53,11 +68,11 @@ exp_montyhall_jogo <- function(input, output, session) {
     #quando escolha_1 != de premio só existe uma porta possível para ser aberta
     #porem, quando a escolha_1 = premio
     
-    porta_abrir <- sample(portas_possiveis, 1)
+    porta_abrir <- sample(-portas_possiveis, 1)
     
     
     abertas <- portas_abertas()
-    abertas[porta_abrir] <- TRUE  #uma uma porta dentro das opções possíveis
+    abertas[-porta_abrir] <- TRUE  #uma uma porta dentro das opções possíveis
     portas_abertas(abertas) #grava a nova sequencia de TRUE/FALSE
     
     }
@@ -67,21 +82,51 @@ exp_montyhall_jogo <- function(input, output, session) {
     
     #função para observa e guardar a escolha inicial do usuario
     escolha_porta <- function(porta){
+      req(is.null(escolha_1()))
+      
       escolha_1(porta)
+      
       abrir_porta_monty()
+      
+      shinyjs::disable(session$ns("porta_1"))
+      shinyjs::disable(session$ns("porta_2"))
+      shinyjs::disable(session$ns("porta_3"))
     }
     
     #observe para as 3 portas (identificar a escolha inicial do usuario)
     observeEvent(input$porta_1,{
+      
+      shinyjs::addClass(
+        id = session$ns("porta_1"),
+        class = "porta-escolhida"
+      )
+      
       escolha_porta(1)
+      
+      
     })
     
     observeEvent(input$porta_2,{
+      
+      shinyjs::addClass(
+        id = session$ns("porta_2"),
+        class = "porta-escolhida"
+      )
+      
       escolha_porta(2)
+      
+      
     })
     
     observeEvent(input$porta_3,{
+      shinyjs::addClass(
+        id = session$ns("porta_3"),
+        class = "porta-escolhida"
+      )
+      
       escolha_porta(3)
+      
+     
     })
     
     
@@ -129,8 +174,65 @@ exp_montyhall_jogo <- function(input, output, session) {
     
     #Outputs
     
+    #outputs para mudança das imagens
+    #PORTA 1
+    output$imagem_porta_1 <- renderUI({
+      
+      if (portas_abertas()[1]) {
+        img(src = "cabra.png",  width = "150px")
+        
+      } else if (!is.null(resultado()) && premio() == 1) {
+        img(src = "premio.png",  width = "150px" )
+        
+      } else {
+        img(src = "porta.png",width = "150px")
+        
+      }
+    })
     
-    #saída para teste antes de adicionar imagens
+    #PORTA 2
+    output$imagem_porta_2 <- renderUI({
+      
+      if (portas_abertas()[2]) {
+        img(src = "cabra.png", width = "150px")
+        
+      } else if (!is.null(resultado()) && premio() == 2) {
+        img(src = "premio.png",  width = "150px" )
+        
+      } else {
+        img(src = "porta.png",width = "150px")
+        
+      }
+    })
+    
+    #porta 3
+    output$imagem_porta_3 <- renderUI({
+      
+      if (portas_abertas()[3]) {
+        img(src = "cabra.png", width = "150px")
+        
+      } else if (!is.null(resultado()) && premio() == 3) {
+        img(src = "premio.png",  width = "150px" )
+        
+      } else {
+        img(src = "porta.png",width = "150px")
+        
+      }
+    })
+    
+    #saída para botões manter/trocar funcionarem apenas após a escolha_1 ter sido feita
+    output$porta_escolhida <- reactive({
+      !is.null(escolha_1())
+    })
+    
+    outputOptions(
+      output,
+      "porta_escolhida",
+      suspendWhenHidden = FALSE
+    )
+    
+    
+    #saída para teste 
     output$debug <- renderPrint({
       
       list(
@@ -155,6 +257,21 @@ exp_montyhall_jogo <- function(input, output, session) {
   # tagList
     
     tagList(
+      tags$style(HTML("
+          .btn-porta {
+           background: transparent;
+           border: none;
+           padding: 0;
+          }
+
+          .btn-porta:hover {
+           background: transparent;
+          }
+
+          .btn-porta.porta-escolhida {
+           opacity: 0.3;
+  }
+      ")),
    
       h3("Experimento de Monty Hall"),
       br(),
@@ -168,20 +285,20 @@ exp_montyhall_jogo <- function(input, output, session) {
       
         column(width = 4,
           actionButton( session$ns("porta_1"),
-                       "PORTA 1",
-                       class = "btn-secondary"
+                        uiOutput(session$ns("imagem_porta_1")),
+                       class = "btn-porta"
           )
         ),
         column(width = 4,
           actionButton(session$ns("porta_2"),
-                       "PORTA 2",
-                      class = "btn-secondary"
+                       uiOutput(session$ns("imagem_porta_2")),
+                       class = "btn-porta"
           )
         ),
         column(width = 4,
           actionButton( session$ns("porta_3"),
-                        "PORTA 3",
-                        class = "btn-secondary"
+                        uiOutput(session$ns("imagem_porta_3")),
+                        class = "btn-porta"
           )
           
         )
@@ -191,14 +308,22 @@ exp_montyhall_jogo <- function(input, output, session) {
       br(),
       br(),
       
-      actionButton(
-        session$ns("manter"),
-        "MANTER JOGADA"
-      ),
-      
-      actionButton(
-        session$ns("trocar"),
-        "TROCAR JOGADA"
+      conditionalPanel(
+        condition = sprintf("output['%s']", session$ns("porta_escolhida")),
+        
+        div(
+          class = "text-center",
+        
+         actionButton(
+          session$ns("manter"),
+          "MANTER JOGADA"
+          ),
+        
+          actionButton(
+         session$ns("trocar"),
+         "TROCAR JOGADA"
+          )
+        )
       ),
       
       br(),
