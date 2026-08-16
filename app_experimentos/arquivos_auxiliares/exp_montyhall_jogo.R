@@ -1,4 +1,4 @@
-exp_montyhall_jogo <- function(input, output, session) {
+exp_montyhall_jogo <- function(input, output, session, registrar_partida) {
   
   # infos atuais "vazias
     premio <- reactiveVal(NULL)
@@ -21,7 +21,10 @@ exp_montyhall_jogo <- function(input, output, session) {
       decisao(NULL)
       escolha_final(NULL)
       resultado(NULL)
-
+      
+      shinyjs::enable(session$ns("manter"))
+      shinyjs::enable(session$ns("trocar"))
+      
       shinyjs::removeClass(
         id = session$ns("porta_1"),
         class = "porta-escolhida"
@@ -86,6 +89,11 @@ exp_montyhall_jogo <- function(input, output, session) {
       
       escolha_1(porta)
       
+      shinyjs::addClass(
+        id = session$ns(paste0("porta_", porta)),
+        class = "porta-escolhida"
+      )
+      
       abrir_porta_monty()
 
       shinyjs::disable(session$ns("porta_1"))
@@ -95,38 +103,15 @@ exp_montyhall_jogo <- function(input, output, session) {
     
     #observe para as 3 portas (identificar a escolha inicial do usuario)
     observeEvent(input$porta_1,{
-
-      shinyjs::addClass(
-        id = session$ns("porta_1"),
-        class = "porta-escolhida"
-      )
-
       escolha_porta(1)
-      
-      
     })
     
     observeEvent(input$porta_2,{
-
-      shinyjs::addClass(
-        id = session$ns("porta_2"),
-        class = "porta-escolhida"
-      )
-      
       escolha_porta(2)
-      
-      
     })
     
     observeEvent(input$porta_3,{
-      shinyjs::addClass(
-        id = session$ns("porta_3"),
-        class = "porta-escolhida"
-      )
-      
       escolha_porta(3)
-      
-     
     })
     
     
@@ -136,6 +121,8 @@ exp_montyhall_jogo <- function(input, output, session) {
     #### finalizar jogo - segunda etapa ##########
     
     finalizar_partida <- function(tipo){
+      
+      req(is.null(resultado()))
       
       decisao(tipo)
       
@@ -157,12 +144,22 @@ exp_montyhall_jogo <- function(input, output, session) {
         resultado("Perdeu!")
       }
       
+      registrar_partida(
+        resultado = resultado(),
+        decisao = decisao()
+      )
+      
+      shinyjs::disable(session$ns("manter"))
+      shinyjs::disable(session$ns("trocar"))
+      
+     
+      
     }
     
     observeEvent(input$manter,{
       
       finalizar_partida("manter")
-      
+     
     })
     
     observeEvent(input$trocar,{
@@ -178,14 +175,28 @@ exp_montyhall_jogo <- function(input, output, session) {
     #PORTA 1
     output$imagem_porta_1 <- renderUI({
       
+      escolhida <- !is.null(escolha_1()) && escolha_1() == 1
+      
       if (portas_abertas()[1]) {
-        img(src = "cabra.png",  width = "150px")
+        img(
+          src = "cabra.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else if (!is.null(resultado()) && premio() == 1) {
-        img(src = "premio.png",  width = "150px" )
+        img(
+          src = "premio.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else {
-        img(src = "porta.png",width = "150px")
+        img(
+          src = "porta.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       }
     })
@@ -193,14 +204,31 @@ exp_montyhall_jogo <- function(input, output, session) {
     #PORTA 2
     output$imagem_porta_2 <- renderUI({
       
+      escolhida <- !is.null(escolha_1()) && escolha_1() == 2
+      
       if (portas_abertas()[2]) {
-        img(src = "cabra.png", width = "150px")
+        
+        img(
+          src = "cabra.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else if (!is.null(resultado()) && premio() == 2) {
-        img(src = "premio.png",  width = "150px" )
+        
+        img(
+          src = "premio.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else {
-        img(src = "porta.png",width = "150px")
+        
+        img(
+          src = "porta.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       }
     })
@@ -208,14 +236,31 @@ exp_montyhall_jogo <- function(input, output, session) {
     #porta 3
     output$imagem_porta_3 <- renderUI({
       
+      escolhida <- !is.null(escolha_1()) && escolha_1() == 3
+      
       if (portas_abertas()[3]) {
-        img(src = "cabra.png", width = "150px")
+        
+        img(
+          src = "cabra.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else if (!is.null(resultado()) && premio() == 3) {
-        img(src = "premio.png",  width = "150px" )
+        
+        img(
+          src = "premio.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       } else {
-        img(src = "porta.png",width = "150px")
+        
+        img(
+          src = "porta.png",
+          width = "150px",
+          style = if (escolhida) "opacity: 0.4;" else "opacity: 1;"
+        )
         
       }
     })
@@ -243,38 +288,82 @@ exp_montyhall_jogo <- function(input, output, session) {
         class = "box-info-jogada",
         
         p(
-          strong("Porta escolhida: "),
+          strong("Primeira porta selecionada: "),
           escolha_1()
         ),
         
         p(
-          strong("Porta aberta por Monty Hall: "),
+          strong("Monty Hall abriu a porta: "),
           porta_aberta
-        )
+        ),
+        p("Agora você pode manter sua escolha ou trocar de porta.")
         
       )
     })
     
-    #saída para teste 
-    output$debug <- renderPrint({
+    output$resultado_jogada <- renderUI({
       
-      list(
-        
-        premio = premio(),
-        
-        escolha_1 = escolha_1(),
-        
-        portas_abertas = portas_abertas(),
-        
-        decisao = decisao(),
-        
-        escolha_final = escolha_final(),
-        
-        resultado = resultado()
-        
-      )
+      req(!is.null(resultado()))
       
+      if (resultado() == "Ganhou!") {
+        
+        div(
+          class = "box-resultado ganhou",
+          
+          h3("Parabéns! Você ganhou!"),
+          
+          p(
+            strong("Porta selecionada: "),
+            escolha_final()
+          ),
+          
+          p(
+            strong("Prêmio na porta: "),
+            premio()
+          )
+        )
+        
+      } else {
+        
+        div(
+          class = "box-resultado perdeu",
+          
+          h3("Você perdeu!"),
+          
+          p(
+            strong("Porta selecionada: "),
+            escolha_final()
+          ),
+          
+          p(
+            strong("Prêmio na porta: "),
+            premio()
+          )
+        )
+      }
     })
+        
+        
+    #saída para teste 
+    # output$debug <- renderPrint({
+    #   
+    #   list(
+    #     
+    #     premio = premio(),
+    #     
+    #     escolha_1 = escolha_1(),
+    #     
+    #     portas_abertas = portas_abertas(),
+    #     
+    #     decisao = decisao(),
+    #     
+    #     escolha_final = escolha_final(),
+    #     
+    #     resultado = resultado()
+    #     
+    #   )
+    #   
+    # })
   
     
   # tagList
@@ -286,10 +375,15 @@ exp_montyhall_jogo <- function(input, output, session) {
   text-align: center;
 }
 
+.portas-row {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .numero-porta {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 3px;
   text-align: center;
 }
 
@@ -308,15 +402,70 @@ exp_montyhall_jogo <- function(input, output, session) {
 .btn-porta.porta-escolhida img {
   opacity: 0.3;
 }
-      ")),
 
-      h3("Experimento de Monty Hall"),
+.botao-nova-partida {
+  position: fixed;
+  bottom: 20px;
+  right: 30px;
+  z-index: 1000;
+}
+
+.box-info-jogada {
+  max-width: 400px;
+  margin: 5px auto 15px;
+  padding: 12px 20px;
+  text-align: center;
+  border-radius: 12px;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+}
+
+.box-info-jogada h4 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.box-info-jogada p {
+  margin: 8px 0;
+}
+
+
+.box-resultado {
+  max-width: 300px;
+  margin: 30px auto;
+  padding: 25px 30px;
+  text-align: center;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.box-resultado h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.box-resultado p {
+  margin: 8px 0;
+  font-size: 17px;
+}
+
+.box-resultado.ganhou {
+  border: 2px solid #198754;
+  background-color: #eaf7ee;
+}
+
+.box-resultado.perdeu {
+  border: 2px solid #dc3545;
+  background-color: #fbeaec;
+}
+   ")),
       br(),
-      p("Escolha uma das portas abaixo"),
-      br(),
+      h5("Escolha uma das portas abaixo:"),
+    
       
       fluidRow( 
-      
+        class = "portas-row",
         column(width = 4,
                div(
                  class = "porta-container",
@@ -351,12 +500,13 @@ exp_montyhall_jogo <- function(input, output, session) {
         )
         
       ),
-      br(),
-      br(),
+     
       
       conditionalPanel(
         condition = sprintf("output['%s']", session$ns("porta_escolhida")),
+        
         uiOutput(session$ns("info_jogada")),
+        
         div(
           class = "text-center",
 
@@ -371,31 +521,24 @@ exp_montyhall_jogo <- function(input, output, session) {
           )
         )
       ),
+      uiOutput(session$ns("resultado_jogada")),
       
-      br(),
-      br(),
+    
       
-      fluidRow(
-        column( width = 12, class = "text-end",
-          actionButton(session$ns("nova_partida"),
-                       "NOVA PARTIDA",
-                        class = "btn-primary"
-          )
+      div(
+        class = "botao-nova-partida",
+        actionButton(
+          session$ns("nova_partida"),
+          "NOVA PARTIDA",
+          class = "btn-primary"
         )
-      ),
+      )
       
       
       #verbatimTextOutput(session$ns("debug")),
+     
+    
       
-      
-      br(),
-      br(),
-      br(),
-      br(),
-      
-      h5("Estatísticas"),
-      textOutput( session$ns("estatisticas_monty")
-      )
     )
     
 }

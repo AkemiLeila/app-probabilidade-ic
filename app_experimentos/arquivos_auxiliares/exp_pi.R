@@ -150,35 +150,9 @@ exp_pi <- function(input, output, session){
       })
 
       tagList(
-        h3("Estimativa de π"),
-        withMathJax(
-          HTML("
-  <p>
-  Geramos pontos aleatórios no quadrado [-1,1] × [-1,1] que tem Área = 4, com círculo cinrcunscrito de raio = 1, com Área (círculo) = PI.
-  <p>
-  $$ \\frac{A_{círculo}}{A_{quadrado}}
-  =
-  \\frac{\\pi}{4}$$
-  
-  <p>
-  Logo a razão entre a área do círculo e a área do quadrado é aproximadamente a proporção entre o número de pontos 
-  dentro do círculo e o total de pontos dentro do quadrado, ou seja, \\(\\pi/4\\).
-  </p>
-
-  $$\\frac{N_{círculo}}{N}\\approx\\frac{\\pi}{4}$$
-
-  <p>
-  Podemos então concluir que, à medida que o número de pontos aumenta,
-  4 vezes essa proporção converge para π.
-  </p>
-$$
-                 \\lim_{N\\to\\infty}
-               4\\frac{N_{círculo}}{N}
-               =
-                 \\pi
-               $$
-  ")
-        ),
+        br(),
+        h3("Estimativa de π."),
+        p(" Observe a convergência no gráfico para o valor real de π à medida que o número de pontos aumenta"),
         
         actionButton(session$ns("nova_amostra"), "Nova Amostra",
                      style = "margin-bottom: 20px; background-color: #4CAF50; color: white;"),
