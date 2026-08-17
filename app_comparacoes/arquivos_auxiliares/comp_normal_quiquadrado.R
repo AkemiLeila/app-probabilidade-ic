@@ -122,13 +122,14 @@ comp_normal_quiquadrado <- function(input, output, session){
 
 
 <p>
-Quando uma variável aleatória possui distribuição Normal padrão,
+Quando uma variável aleatória X possui distribuição Normal padrão,
 o quadrado dessa variável segue uma distribuição Qui-Quadrado
 com 1 grau de liberdade:
 </p>
 
+
 $$
-X^2 \\sim \\chi^2(1)
+\\boxed{X^2\\sim\\chi^2_1}
 $$
 
 <p>
@@ -137,26 +138,25 @@ a soma dos quadrados de variáveis Normais padrão independentes.
 </p>
 
 <p>
-De forma geral:
+De forma geral, se
+\\(Z_1,Z_2,\\ldots,Z_k\\) são variáveis aleatórias independentes,
+todas com distribuição Normal padrão,
 </p>
 
 $$
-\\chi^2(k)=
-Z_1^2 + Z_2^2 + \\cdots + Z_k^2
+Z_i\\sim N(0,1),
+\\quad i=1,2,\\ldots,k,
 $$
-
 <p>
-onde:
+então a soma de seus quadrados possui distribuição Qui-Quadrado com
+\\(k\\) graus de liberdade:
 </p>
 
 $$
-Z_1, Z_2, \\ldots, Z_k \\sim N(0,1)
+Z_1^2+Z_2^2+\\cdots+Z_k^2
+\\sim
+\\chi^2_k.
 $$
-
-<p>
-e todas as variáveis são independentes.
-</p>
-
 
 <p>
 Observe que a distribuição Normal possui valores positivos e negativos,
@@ -169,7 +169,8 @@ Ao elevar os valores ao quadrado:
 
 <ul>
 <li>todos os valores tornam-se não negativos;</li>
-<li>a distribuição perde sua simetria.</li>
+<li>os valores passam a pertencer ao intervalo \\([0,\\infty)\\);</li>
+<li>a distribuição deixa de ser simétrica em torno de zero.</li>
 </ul>
 
 

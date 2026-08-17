@@ -72,7 +72,7 @@ comp_beta_uniforme <- function(input, output, session){
     withMathJax(),
     
     HTML("
-<p>Isso acontece porque a densidade da Beta é:</p>
+<p>Isso acontece porque a densidade da distribuição Beta é:</p>
 
 $$
 f(x) =

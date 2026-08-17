@@ -126,7 +126,7 @@ cenarios_suporte_didatico_server <-  function(input, session) {
   observeEvent(input$exemplo1_exp, {
     updateSelectInput( session,"dist", selected = "Exponencial")
      updateNumericInput( session,"lambda_exp", value = 0.5)
-     updateNumericInput( session,"n_exp", value = 1000)
+     updateNumericInput( session,"n_exp", value = 100000)
     updateTabsetPanel( session,"abas_principais", selected = "Distribuição Original")
   })
 

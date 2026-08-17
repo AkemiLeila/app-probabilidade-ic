@@ -150,53 +150,17 @@ exp_pi <- function(input, output, session){
       })
 
       tagList(
-        h3("Estimativa de π"),
-        withMathJax(
-          HTML("
-  <p>
-  Geramos pontos aleatórios no quadrado [-1,1] × [-1,1] que tem Área = 4, com círculo cinrcunscrito de raio = 1, com Área (círculo) = PI.
-  <p>
-  $$ \\frac{A_{círculo}}{A_{quadrado}}
-  =
-  \\frac{\\pi}{4}$$
-  
-  <p>
-  Logo a razão entre a área do círculo e a área do quadrado é aproximadamente a proporção entre o número de pontos 
-  dentro do círculo e o total de pontos dentro do quadrado, ou seja, \\(\\pi/4\\).
-  </p>
-
-  $$\\frac{N_{círculo}}{N}\\approx\\frac{\\pi}{4}$$
-
-  <p>
-  Podemos então concluir que, à medida que o número de pontos aumenta,
-  4 vezes essa proporção converge para π.
-  </p>
-$$
-                 \\lim_{N\\to\\infty}
-               4\\frac{N_{círculo}}{N}
-               =
-                 \\pi
-               $$
-  ")
-        ),
+        br(),
+        p(" Observe a convergência no gráfico para o valor real de π à medida que o número de pontos aumenta"),
         
         actionButton(session$ns("nova_amostra"), "Nova Amostra",
                      style = "margin-bottom: 20px; background-color: #4CAF50; color: white;"),
         sliderInput(session$ns( "n_pi"), "Número de pontos:",  min = 0, max = 20000,  value = 100,
-                    step = 100, sep = "",animate = TRUE, width = "800px"),
-        br(), br(),
+                    step = 100, sep = "",animate = TRUE, width = "400px"),
+        
         
         
         textOutput(session$ns( "estimativa_pi")),
-      #   
-      #   plotOutput(session$ns("grafico_pi"), height = "350px"),
-      # 
-      #   br(),
-      #   h4("Evolução da Estimativa"),
-      #   p("O gráfico abaixo mostra como a estimativa de π converge para o valor verdadeiro
-      # à medida que mais pontos são adicionados."),
-      # 
-      #   plotOutput(session$ns("grafico_convergencia"), height = "400px")
 
       
       fluidRow(

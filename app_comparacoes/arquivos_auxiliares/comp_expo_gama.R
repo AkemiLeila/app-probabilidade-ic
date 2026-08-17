@@ -90,18 +90,18 @@ comp_expo_gama <- function(input, output, session){
          </p>
            
            <p>
-           A densidade da distribuição Exponencial com parâmetro
+           A densidade da distribuição Exponencial com parâmetro de taxa 
          \\(\\lambda\\) é dada por:
            </p>
            
            $$
            f(x)=
            \\lambda e^{-\\lambda x},
-         \\quad x \\geq 0
+         \\quad x > 0
          $$
            
            <p>
-           E a densidade da distribuição Gama é dada por:
+           E a densidade da distribuição Gama na parametrização forma-taxa é dada por:
            </p>
            
            $$
@@ -109,7 +109,7 @@ comp_expo_gama <- function(input, output, session){
            \\frac{\\beta^\\alpha}
          {\\Gamma(\\alpha)}
          x^{\\alpha-1}e^{-\\beta x},
-         \\quad x \\geq 0
+        \\quad x > 0
          $$
            
            

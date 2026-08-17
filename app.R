@@ -1,4 +1,6 @@
 
+
+
 library(shiny)
 library(ggplot2)
 library(DT)
@@ -15,6 +17,8 @@ source("app_experimentos/app_exp.R")
 ui_App <- function()
   
   page_navbar(
+    
+    
  
     theme = bs_theme(
       version = 5,
@@ -48,8 +52,51 @@ ui_App <- function()
     
   nav_panel(
     title = "Início",
+    
     h2("Meu Aplicativo de Probabilidade"),
-    p("Selecione uma das abas acima para começar.")
+    
+    p(
+      "Este aplicativo tem como objetivo funcionar como uma ferramenta didática
+  interativa, auxiliando estudantes e profissionais no ensino e na
+  aprendizagem de conceitos de Probabilidade."
+    ),
+    
+    p(
+      "Aqui, você encontrará uma aba destinada às ",
+      strong("Distribuições de Probabilidade"),
+      ", na qual será possível explorar diferentes distribuições discretas
+  e contínuas, seus parâmetros, funções de probabilidade ou densidade
+  e algumas de suas principais propriedades."
+    ),
+    
+    p(
+      "A aba ",
+      strong("Comparações"),
+      " é destinada à visualização e ao estudo das relações entre diferentes
+  distribuições de probabilidade, permitindo observar casos particulares,
+  aproximações e outras relações importantes."
+    ),
+    
+    p(
+      "A última aba, ",
+      strong("Experimentos"),
+      ", busca dar uma abordagem interativa a conceitos de Probabilidade
+  por meio de simulações. Nela, são explorados o ",
+      strong("método de Monte Carlo"),
+      ", os ensaios aleatórios do",
+      strong("lançamento de uma moeda"),
+      "e o ",
+      strong("problema de Monty Hall"),
+      "."
+    ),
+    
+    p(
+      "Caso queira entrar em contato, envie um e-mail para: ",
+      a(
+        "l277185@dac.unicamp.com",
+        href = "mailto:seuemail@email.com"
+      )
+    )
   ),
   
   nav_panel(

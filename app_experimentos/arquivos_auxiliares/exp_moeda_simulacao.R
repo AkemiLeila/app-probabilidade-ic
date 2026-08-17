@@ -140,10 +140,29 @@ exp_moeda_simulacao <- function(input, output, session){
   
  #_____________OUTPUTS
   
-  output$resultado_moeda <- renderText({
+  output$resultado_moeda <- renderUI({
+    
     req(resultado_atual())
-    paste("Último lançamento:", resultado_atual())
-
+    
+    div(
+      style = "text-align: center;",
+      
+      if (resultado_atual() == "cara") {
+        
+        img(
+          src = "moeda_cara.png",
+          width = "180px"
+        )
+        
+      } else {
+        
+        img(
+          src = "moeda_coroa.png",
+          width = "180px"
+        )
+        
+      }
+    )
   })
   
   
@@ -182,41 +201,155 @@ exp_moeda_simulacao <- function(input, output, session){
   })
   
   
- 
+  output$moeda_atual <- renderUI({
+    
+    req(resultado_atual())
+    
+    resultado <- resultado_atual()
+    
+    classe <- if (resultado == "cara") {
+      "moeda-atual moeda-cara"
+    } else {
+      "moeda-atual moeda-coroa"
+    }
+    
+    div(
+      class = "moeda-container",
+      
+      div(
+        class = classe,
+        toupper(resultado)
+      )
+    )
+  })
   
-  
+  output$historico_visual <- renderUI({
+    
+    req(length(historico_resultados()) > 0)
+    
+    div(
+      class = "historico-moedas",
+      
+      paste(
+        historico_resultados(),
+        collapse = " | "
+      )
+    )
+  })
   
   #taglist com textos e diagramação
   tagList(
     
-    h3("Lançamento de uma Moeda Honesta"),
-    br(), 
+    tags$style(HTML("
+
+  .moeda-container {
+    text-align: center;
+    margin: 10px auto 25px;
+  }
+
+  .moeda-atual {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 15px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  }
+
+  .moeda-cara {
+    background-color: #e8f0ed;
+    border: 3px solid #2F5D50;
+    color: #2F5D50;
+  }
+
+  .moeda-coroa {
+    background-color: #f5e9ea;
+    border: 3px solid #67161C;
+    color: #67161C;
+  }
+
+.historico-moedas {
+  text-align: center;
+  margin: 20px auto;
+  max-width: 750px;
+  line-height: 1.8;
+  color: #343a40;
+  font-size: 16px;
+}
+  
+
+  .historico-titulo {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    color: #343a40;
+    font-weight: 600;
+  }
+
+  .botoes-moeda {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+")),
+    
+    br(),
+    h4("Lançamento de uma Moeda Honesta"),
    
-    textOutput(
+    p(
+      "Observe o resultado de cada lançamento e acompanhe a evolução ",
+      "da proporção de caras ao longo da simulação."
+    ),
+    
+    br(), 
+    uiOutput(
       session$ns("resultado_moeda")
     ),
-   
     br(),
+    h3(
+      style = "text-align: center;",
+      "Resultados dos últimos lançamentos"
+    ),
+    
+    uiOutput(
+      session$ns("historico_visual")
+    ),
+    
+    br(),
+   
     fluidRow(
       
       column(
         width = 6,
-        tableOutput(
-          session$ns("tabela_moeda")
+        
+        div(
+          style = "text-align: center;",
+          
+          tableOutput(
+            session$ns("tabela_moeda")
+          )
         )
       ),
       
       column(
         width = 6,
-        br(),
         
-        actionButton(
-          session$ns("novo_lancamento"),
-          "Nova Jogada",
-          class = "btn-primary"
-        ),
+        div(
+          style = "text-align: center; padding-top: 10px;",
+          
+          actionButton(
+            session$ns("novo_lancamento"),
+            "Novo lançamento",
+            class = "btn-primary"
+          ),
         
         br(), br(),
+        
         actionButton(
           session$ns("encerrar_partida"),
           "Encerrar Partida",
@@ -228,59 +361,11 @@ exp_moeda_simulacao <- function(input, output, session){
     
     br(), br(),
     plotOutput(session$ns("grafico_convergencia"), height = "350px"),
-    br(),
-    h3("Convergência em Probabilidade"),
-    br(), 
-    withMathJax(
-      HTML("
-  <p>
-  Ao lançar uma moeda honesta sucessivamente, onde a probabilidade teórica de sair 'cara' é 
-  \\(p = 0,5\\) a proporção observada de caras após \\(n\\) lançamentos é definida como:
-  </p>
-  
-  $$\\hat{p}_n = \\frac{\\text{Número de caras}}{n}$$
-  
-  <p>
-  A <strong>Lei Fraca dos Grandes Números</strong> estabelece que esta proporção 
-  converge em probabilidade para a probabilidade teórica:
-  </p>
-  
-  $$\\lim_{n\\to\\infty} P(|\\hat{p}_n - p| > \\varepsilon) = 0, \\quad \\forall \\varepsilon > 0$$
-  
-  <p>
-  Ou seja, à medida que aumentamos o número de lançamentos, a probabilidade de a 
-  proporção observada se afastar do valor verdadeiro (0,5) por mais do que uma pequena 
-  margem \\(\\varepsilon\\) tende a zero.
-  </p>
-  
-  <p>
-  No gráfico abaixo, a linha verde representa \\(\\hat{p}_n\\) (proporção acumulada de caras) 
-  e a linha vermelha tracejada indica o valor teórico \\(p = 0,5\\). Observamos que, 
-  conforme \\(n\\) cresce:
-  </p>
-  
-  <ul>
-    <li>As oscilações de \\(\\hat{p}_n\\) diminuem de amplitude</li>
-    <li>\\(\\hat{p}_n\\) se aproxima cada vez mais de 0,5</li>
-    <li>A probabilidade de grandes desvios torna-se cada vez menor</li>
-  </ul>
-  
-  <p>
-  Matematicamente, dizemos que:
-  </p>
-  
-  $$\\hat{p}_n \\xrightarrow{P} 0,5$$
-  
-  <p>
-  onde \\(\\xrightarrow{P}\\) denota convergência em probabilidade.
-  </p>
-  ")
-    ),
-    
+
     
   )
   
-
+)
   
   
 }

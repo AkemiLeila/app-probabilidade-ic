@@ -4,7 +4,7 @@
 
 pal_edward_hopper <- c(
   "dark_red"   = "#67161C",
-  "green"      = "#2F5D50",
+  "green"      = "2F5D50#",
   "beige"      = "#DBD3A4",
   "gold"       = "#A4804C",
   "blue"       = "#2E4F73"

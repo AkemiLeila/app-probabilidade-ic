@@ -2,18 +2,21 @@ input_exp <- function(id){
   
   
   tagList(
-      selectInput(NS(id,"tipo_exp"), "Experimentos:", choices = c("", "PI", "Moeda")),
+      selectInput(NS(id,"tipo_exp"), "Experimentos:", choices = c("", "Monte Carlo — π", "Lançamento Moeda", "Monty Hall")),
 
 
       conditionalPanel(
-      condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'PI'"),
-      helpText("Simulação de pontos aleatórios em um alvo quadrado para calcular a razão de acertos
-            no círculo circunscrito e estimar, a partir dela, o valor de PI")
+      condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Monte Carlo — π'"),
+      helpText("Experimento de Monte Carlo para estimar π")
       ),
       
       conditionalPanel(
-      condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Moeda'"),
-      helpText("Simulação de probabilidade para uma moeda honesta")
+      condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Lançamento Moeda'"),
+      helpText("Experimento aleatório: probabilidade para uma moeda honesta")
      
+      ),
+      conditionalPanel(
+        condition = paste0("input['", NS(id, "tipo_exp"), "'] == 'Monty Hall'"),
+        helpText("Experimento de probabilidade condicional para o problema de Monty Hall")
       )
 )}

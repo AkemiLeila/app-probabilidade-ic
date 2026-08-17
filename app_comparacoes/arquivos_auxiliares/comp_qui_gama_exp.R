@@ -104,36 +104,41 @@ comp_qui_gama_exp <- function(input, output, session){
       HTML("
 
 <p>
-Isso porque tanto a distribuição Exponencial como a distribuição Qui-Quadrado
+Isso ocorre porque tanto a distribuição Exponencial como a distribuição Qui-Quadrado
 são casos particulares da distribuição Gama.
 </p>
 
 <p>
-A densidade da distribuição Gama é:
+A função densidade de probabilidade da distribuição Gama, na parametrização forma-taxa, é dada por:
 </p>
+
 
 $$
 f(x)=
 \\frac{\\beta^\\alpha}
 {\\Gamma(\\alpha)}
 x^{\\alpha-1}e^{-\\beta x},
-\\quad x \\geq 0
+\\quad x>0,
+\\quad \\alpha>0,\\;\\beta>0
 $$
 
+
 <p>
-Uma distribuição Qui-Quadrado com \\(k\\) graus de liberdade possui densidade:
+Uma distribuição Qui-Quadrado com \\(k\\) graus de liberdade possui função densidade de probabilidade dada por:
 </p>
+
 
 $$
 f(x)=
 \\frac{1}
 {2^{k/2}\\Gamma(k/2)}
 x^{k/2-1}e^{-x/2},
-\\quad x \\geq 0
+\\quad x>0,
+\\quad k>0
 $$
 
 <p>
-Comparando com a distribuição Gama, temos:
+Comparando essa expressão com a densidade da distribuição Gama, temos:
 </p>
 
 $$
@@ -143,29 +148,36 @@ $$
 $$
 
 <p>
-Logo:
+Logo, uma variável aleatória com distribuição Qui-Quadrado com
+\\(k\\) graus de liberdade também pode ser representada como uma
+variável aleatória com distribuição Gama:
 </p>
 
 $$
-\\chi^2(k)=Gamma\\left(
+\\boxed{
+X\\sim\\chi^2_k
+\\quad\\Longleftrightarrow\\quad
+X\\sim Gamma\\left(
 \\frac{k}{2},
 \\frac{1}{2}
 \\right)
+}
 $$
 
 <p>
-Da mesma forma, a distribuição Exponencial com parâmetro
-\\(\\lambda\\) possui densidade:
+Da mesma forma, a distribuição Exponencial com parâmetro de taxa
+\\(\\lambda\\) possui função densidade de probabilidade:
 </p>
 
 $$
 f(x)=
 \\lambda e^{-\\lambda x},
-\\quad x \\geq 0
+\\quad x>0,
+\\quad \\lambda>0
 $$
 
 <p>
-Comparando com a distribuição Gama:
+Comparando essa expressão com a densidade da distribuição Gama, temos:
 </p>
 
 $$
@@ -175,13 +187,18 @@ $$
 $$
 
 <p>
-Portanto:
+Portanto, uma variável aleatória com distribuição Exponencial de taxa
+\\(\\lambda\\) também possui uma distribuição Gama com parâmetro de
+forma igual a 1:
 </p>
 
 $$
-Exp(\\lambda)=Gamma(1,\\lambda)
+\\boxed{
+X\\sim Exp(\\lambda)
+\\quad\\Longleftrightarrow\\quad
+X\\sim Gamma(1,\\lambda)
+}
 $$
-
 ")
       
     )

@@ -120,6 +120,10 @@ exp_moeda_cqc <- function(input, output, session){
   tagList(
     br(),
     
+    p("A simulação apresenta 6 amostras aleatórias de 10.000 lançamentos cada. ",
+  "Em cada amostra, acompanhamos a evolução da proporção acumulada de caras ",
+  "ao longo dos lançamentos."
+),
     actionButton(session$ns("nova_simulacao"),
                  "Nova Simulação"),
     
@@ -136,7 +140,7 @@ exp_moeda_cqc <- function(input, output, session){
     ),
     
     br(),
-    plotOutput(session$ns("grafico_cqc"), height = "600px")
+    plotOutput(session$ns("grafico_cqc"), height = "500px")
   )
   
 }
