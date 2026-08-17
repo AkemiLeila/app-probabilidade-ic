@@ -151,14 +151,13 @@ exp_pi <- function(input, output, session){
 
       tagList(
         br(),
-        h3("Estimativa de π."),
         p(" Observe a convergência no gráfico para o valor real de π à medida que o número de pontos aumenta"),
         
         actionButton(session$ns("nova_amostra"), "Nova Amostra",
                      style = "margin-bottom: 20px; background-color: #4CAF50; color: white;"),
         sliderInput(session$ns( "n_pi"), "Número de pontos:",  min = 0, max = 20000,  value = 100,
-                    step = 100, sep = "",animate = TRUE, width = "800px"),
-        br(), br(),
+                    step = 100, sep = "",animate = TRUE, width = "400px"),
+        
         
         
         textOutput(session$ns( "estimativa_pi")),

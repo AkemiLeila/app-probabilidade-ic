@@ -84,8 +84,8 @@ distribuição Binomial.
 </p>
 
 <p>
-A distribuição Binomial diz sobre o número de sucessos em
-\\(n\\) ensaios independentes, cada um com probabilidade de sucesso \\(p\\).
+A distribuição Binomial modela o número de sucessos em
+\\(n\\) ensaios de Bernoulli independentes, cada um com probabilidade de sucesso \\(p\\).
 </p>
 
 $$
@@ -96,7 +96,7 @@ p^x(1-p)^{n-x},
 $$
 
 <p>
-Já a distribuição de Poisson diz sobre a quantidade de ocorrências de um
+Já a distribuição de Poisson diz sobre o número de ocorrências de um
 evento em um intervalo fixo, utilizando o parâmetro \\(\\lambda\\),
 que representa a taxa média de ocorrências:
 </p>
@@ -142,7 +142,7 @@ de sucesso é muito pequena, os eventos tornam-se raros.
 
 <p>
 Observe nos gráficos que, para valores adequados de \\(n\\) e \\(p\\),
-as probabilidades da Binomial e da Poisson tornam-se muito semelhantes.
+as funções de probabilidade da Binomial e da Poisson tornam-se muito semelhantes.
 </p>
 
          ")

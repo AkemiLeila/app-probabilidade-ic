@@ -107,22 +107,23 @@ comp_normal_cauchy_tstudent <- function(input, output, session){
     withMathJax(),
     
     HTML("
-    Ao compararmos as distribuições Normal, T-Student e Cauchy, temos
+    Ao compararmos as distribuições Normal, T-Student e Cauchy, podemos observar algumas relações interessantes entre elas.
     
     
 <p>
-A densidade da distribuição Normal como:
+Sendo a densidade da distribuição Normal 
 </p>
-
 $$
 f(x)=
 \\frac{1}
 {\\sqrt{2\\pi\\sigma^2}}
-e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}}
+e^{-\\frac{(x-\\mu)^2}{2\\sigma^2}},
+\\quad x\\in\\mathbb{R},
+\\quad \\sigma>0
 $$
 
 <p>
-A distribuição T-Student com \\(\\nu\\) graus de liberdade com densidade:
+a densidade da distribuição T-Student com \\(\\nu\\) graus de liberdade 
 </p>
 
 $$
@@ -143,11 +144,14 @@ f(x)=
 \\frac{x^2}{\\nu}
 \\right)^{
 -\\frac{\\nu+1}{2}
-}
+},
+\\quad x\\in\\mathbb{R},
+\\quad \\nu>0
 $$
 
 <p>
-E a distribuição Cauchy com densidade:
+e a densidade da distribuição Cauchy, com parâmetro de localização \\(\\theta\\) e
+parâmetro de escala \\(\\lambda>0\\)
 </p>
 
 $$
@@ -161,11 +165,13 @@ f(x)=
 \\frac{x-\\theta}{\\lambda}
 \\right)^2
 \\right]
-}
+},
+\\quad x\\in\\mathbb{R},
+\\quad \\lambda>0
 $$
 
 <p>
-Observa-se que, conforme os graus de liberdade aumentam
+pode-se observar que, conforme os graus de liberdade aumentam
 </p>
 
 $$
@@ -173,12 +179,16 @@ $$
 $$
 
 <p>
-a distribuição T-Student aproxima-se da distribuição Normal.
+a distribuição T-Student converge para a distribuição Normal padrão:
 </p>
+
+$$
+T_\\nu \\xrightarrow{d} N(0,1).
+$$
 
 
 <p>
-Enquanto isso, distribuição Cauchy é um caso particular da T-Student se
+Enquanto isso, distribuição Cauchy padrão é um caso particular da distribuição T-Student quando
 </p>
 
 $$
@@ -186,15 +196,16 @@ $$
 $$
 
 <p>
-Ou seja:
+Nesse caso:
 </p>
 
 $$
-T(1)=Cauchy
+\\boxed{T_1=Cauchy(0,1)}
 $$
 
 <p>
-No fim, temos que:
+Ou seja, a Cauchy padrão é equivalente à distribuição T-Student com
+1 grau de liberdade.
 </p>
 
       ")
