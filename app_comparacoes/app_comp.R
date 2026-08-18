@@ -43,11 +43,11 @@ comparacoes_server <- function(id){
                  
                  
                  #evita executar algo quando "" vazio - desbug
-                 observeEvent(input$tipo_comp, {
-                   if (input$tipo_comp != "") {
-                     print("Comparação selecionada")
-                   } 
-                 })
+                 # observeEvent(input$tipo_comp, {
+                 #   if (input$tipo_comp != "") {
+                 #     print("Comparação selecionada")
+                 #   } 
+                 # })
                  
                  
                  
