@@ -155,7 +155,7 @@ exp_pi <- function(input, output, session){
         
         actionButton(session$ns("nova_amostra"), "Nova Amostra",
                      style = "margin-bottom: 20px; background-color: #4CAF50; color: white;"),
-        sliderInput(session$ns( "n_pi"), "Número de pontos:",  min = 0, max = 20000,  value = 100,
+        sliderInput(session$ns( "n_pi"), "Número de pontos gerados:",  min = 0, max = 20000,  value = 100,
                     step = 100, sep = "",animate = TRUE, width = "400px"),
         
         

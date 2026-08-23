@@ -336,7 +336,6 @@ exp_pi_teoria <- function(input, output, session) {
           )
         ),
         
-        
         # =====================================================
         # 5. CONVERGÊNCIA
         # =====================================================
@@ -350,21 +349,121 @@ exp_pi_teoria <- function(input, output, session) {
         ),
         
         p(
-          "Consequentemente, a estimativa de π converge para seu valor verdadeiro:"
+          "Considere a variável aleatória Xi, que representa o resultado do ",
+          "i-ésimo ponto gerado:"
         ),
         
         div(
           class = "formula-pi",
           
           "$$
-        \\lim_{N\\to\\infty}
-        4\\frac{N_{círculo}}{N}
-        =
-        \\pi
-        $$"
+  X_i =
+  \\begin{cases}
+    1, & \\text{se o ponto } i \\text{ cair no círculo},\\\\
+    0, & \\text{caso contrário}.
+  \\end{cases}
+  $$"
         ),
         
+        p(
+          "A proporção de pontos que caem dentro do círculo, após a geração de ",
+          "n pontos, pode ser escrita como:"
+        ),
         
+        div(
+          class = "formula-pi",
+          
+          "$$
+  \\hat{p}_n =
+  \\frac{1}{n}\\sum_{i=1}^{n}X_i
+  $$"
+        ),
+        
+        p(
+          "Nessa expressão, n representa o número de pontos utilizados, ",
+          "Xi representa o resultado do i-ésimo ponto e ",
+          "p chapéu representa a proporção observada."
+        ),
+        
+        p(
+          "Como a probabilidade de um ponto cair dentro do círculo é dada pela ",
+          "razão entre a área do círculo e a área do quadrado, temos:"
+        ),
+        
+        div(
+          class = "formula-pi",
+          
+          "$$
+  P(X_i = 1) =
+  \\frac{\\pi}{4}
+  $$"
+        ),
+        
+        p(
+          "A estimativa de π é então obtida multiplicando a proporção observada por 4:"
+        ),
+        
+        div(
+          class = "formula-pi",
+          
+          "$$
+  \\hat{\\pi}_n = 4\\hat{p}_n
+  $$"
+        ),
+        
+        p(
+          "A desigualdade de Chebyshev fornece uma justificativa matemática para ",
+          "essa convergência. Para qualquer margem de erro ε > 0, ela mostra que ",
+          "a probabilidade de a proporção observada diferir da proporção teórica ",
+          "π/4 por mais que ε tende a zero à medida que o número de pontos aumenta:"
+        ),
+        
+        div(
+          class = "formula-pi",
+          
+          "$$
+  P\\left(
+    \\left|
+      \\hat{p}_n - \\frac{\\pi}{4}
+    \\right|
+    >
+    \\varepsilon
+  \\right)
+  \\xrightarrow[n \\to \\infty]{}
+  0
+  $$"
+        ),
+        
+        p(
+          "Isso significa que a proporção observada converge em probabilidade ",
+          "para a proporção teórica:"
+        ),
+        
+        div(
+          class = "formula-pi",
+          
+          "$$
+  \\hat{p}_n
+  \\xrightarrow{P}
+  \\frac{\\pi}{4}
+  $$"
+        ),
+        
+        p(
+          "Consequentemente, estimativa de π (π chapéu) é obtida multiplicando a proporção ",
+          "observada por 4, ela também converge em probabilidade para π:"
+          
+        ),
+        
+        div(
+          class = "formula-pi",
+          
+          "$$
+  \\hat{\\pi}_n
+  \\xrightarrow{P}
+  \\pi
+  $$"
+        ),
         
         
         # =====================================================

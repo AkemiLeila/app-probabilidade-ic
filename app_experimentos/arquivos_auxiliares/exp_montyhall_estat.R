@@ -1,34 +1,32 @@
 exp_montyhall_estat <- function(input, output, session, estatisticas) {
   
-  # Gráfico de partidas ganhas
-  output$grafico_ganhos <- renderPlot({
+  # Gráfico de partidas trocando 
+  
+  output$grafico_trocando <- renderPlot({
     
     dados <- estatisticas()
     
-    ganhou_trocando <- sum(
+    ganhou<- sum(
       dados$resultado == "Ganhou!" &
         dados$decisao == "trocar"
     )
     
-    ganhou_mantendo <- sum(
-      dados$resultado == "Ganhou!" &
-        dados$decisao == "manter"
+    perdeu <- sum(
+      dados$resultado == "Perdeu!" &
+        dados$decisao == "trocar"
     )
     
-    valores <- c(
-      ganhou_trocando,
-      ganhou_mantendo
-    )
+    valores <- c(ganhou, perdeu)
     
     limite_y <- max(1, max(valores) + 1)
     
     barplot(
       valores,
-      names.arg = c("Trocando", "Mantendo"),
-      main = "Partidas ganhas",
+      names.arg = c("Ganhou", "Perdeu"),
+      main = "Estratégia: Trocando",
       ylab = "Número de partidas",
       ylim = c(0, max(1, valores) + 1),
-      col = c("#6F968B", "#ADB3B8"),
+      col = c("#6F968B", "#A66A6E"),
       yaxt = "n"
     )
     
@@ -36,35 +34,32 @@ exp_montyhall_estat <- function(input, output, session, estatisticas) {
   })
   
   
-  # Gráfico de partidas perdidas
-  output$grafico_perdas <- renderPlot({
+  # Gráfico de partidas mantendo
+  output$grafico_mantendo <- renderPlot({
     
     dados <- estatisticas()
     
-    perdeu_trocando <- sum(
-      dados$resultado == "Perdeu!" &
-        dados$decisao == "trocar"
+    ganhou <- sum(
+      dados$resultado == "Ganhou!" &
+        dados$decisao == "manter"
     )
     
-    perdeu_mantendo <- sum(
+    perdeu <- sum(
       dados$resultado == "Perdeu!" &
         dados$decisao == "manter"
     )
     
-    valores <- c(
-      perdeu_trocando,
-      perdeu_mantendo
-    )
+    valores <- c(ganhou, perdeu)
     
     limite_y <- max(1, max(valores) + 1)
     
     barplot(
       valores,
-      names.arg = c("Trocando", "Mantendo"),
-      main = "Partidas perdidas",
+      names.arg = c("Ganhou", "Perdeu"),
+      main = "Estratégia: Mantendo",
       ylab = "Número de partidas",
       ylim = c(0, max(1, valores) + 1),
-      col = c("#A66A6E", "#ADB3B8"),
+      col = c("#6F968B", "#A66A6E"),
       yaxt = "n"
     )
     
@@ -75,21 +70,21 @@ exp_montyhall_estat <- function(input, output, session, estatisticas) {
   # Interface
   tagList(
     
-    h4("Estatísticas das partidas"),
+    h4("Eficiência das Estratégias Escolhidas"),
     
     fluidRow(
       
       column(
         width = 6,
         plotOutput(
-          session$ns("grafico_ganhos")
+          session$ns("grafico_trocando")
         )
       ),
       
       column(
         width = 6,
         plotOutput(
-          session$ns("grafico_perdas")
+          session$ns("grafico_mantendo")
         )
       )
       

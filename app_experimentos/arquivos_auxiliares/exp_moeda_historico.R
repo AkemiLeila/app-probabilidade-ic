@@ -35,9 +35,6 @@ exp_moeda_historico <- function(input, output, session){
   
   
   
-  
-  
-  
   #Saídas para a aba histórico de partidas
   output$tabela_historico <- DT::renderDT({
     
